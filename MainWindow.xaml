@@ -1,0 +1,69 @@
+﻿<fluent:RibbonWindow
+    x:Class="Crm.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:fluent="urn:fluent-ribbon"
+    xmlns:local="clr-namespace:Crm"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    Title="Startbildschirm"
+    Width="1000"
+    Height="600"
+    ui:WindowHelper.UseModernWindowStyle="True">
+    <DockPanel>
+
+        <!--  Menü/Ribbon oben  -->
+        <ToolBar DockPanel.Dock="Top">
+            <Button
+                Width="70"
+                Margin="5"
+                Content="Neu" />
+            <Button
+                Width="90"
+                Margin="5"
+                Content="Bearbeiten" />
+            <Button
+                Width="90"
+                Margin="5"
+                Content="Löschen" />
+            <Separator />
+            <Button
+                Width="90"
+                Margin="5"
+                Content="Suchen" />
+            <TextBox Width="150" Margin="5" />
+        </ToolBar>
+
+        <!--  Navigation links  -->
+        <TreeView
+            Width="220"
+            Margin="5"
+            DockPanel.Dock="Left"
+            SelectedItemChanged="TreeView_SelectedItemChanged">
+            <TreeViewItem Header="Projekt">
+                <TreeViewItem Header="Firmen">
+                    <TreeViewItem Header="Anlegen">
+                        <TreeViewItem Header="Firma Anlegen" />
+                        <TreeViewItem Header="Abteilung Anlegen" />
+                    </TreeViewItem>
+                    <TreeViewItem Header="Übersicht">
+                        <TreeViewItem Header="Firma Übersicht" />
+                        <TreeViewItem Header="Abteilung Übersicht" />
+                    </TreeViewItem>
+                    <TreeViewItem Header="Firmen Suche" />
+                </TreeViewItem>
+                <TreeViewItem Header="Kontakte">
+                    <TreeViewItem Header="Kontakte Anlegen" />
+                    <TreeViewItem Header="Kontakte Übersicht" />
+                    <TreeViewItem Header="Kontakte Suche" />
+                </TreeViewItem>
+                <TreeViewItem Header="Aktivitäten" />
+                <TreeViewItem Header="Infornationen" />
+                <TreeViewItem Header="Kalender" />
+            </TreeViewItem>
+            <TreeViewItem Header="Sonstiges" />
+        </TreeView>
+
+        <!--  Hauptinhalt rechts (dynamisch)  -->
+        <ContentControl x:Name="ContentRegion" Margin="10" />
+    </DockPanel>
+</fluent:RibbonWindow>

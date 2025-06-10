@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="Crm.Views.AbteilungErfassen"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+
+    Width="400"
+    Height="550">
+
+    <Grid Margin="10">
+        <StackPanel>
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="16"
+                FontWeight="Bold"
+                Text="Abteilung erfassen" />
+
+            <!--  Unternehmen auswählen  -->
+            <Label Content="Unternehmen" />
+            <ComboBox
+                DisplayMemberPath="Firmenname"
+                ItemsSource="{Binding UnternehmenListe}"
+                SelectedItem="{Binding AusgewaehltesUnternehmen}" />
+
+            <Label Content="Abteilungsname" />
+            <xceed:WatermarkTextBox Text="{Binding Name}" Watermark="Name" />
+
+            <Label Content="Straße" />
+            <xceed:WatermarkTextBox Text="{Binding Strasse}" Watermark="Straße" />
+
+            <Label Content="PLZ" />
+            <xceed:WatermarkTextBox Text="{Binding PLZ}" Watermark="PLZ" />
+
+            <Label Content="Ort" />
+            <xceed:WatermarkTextBox Text="{Binding Ort}" Watermark="Ort" />
+
+            <Label Content="Land" />
+            <xceed:WatermarkTextBox Text="{Binding Land}" Watermark="Land" />
+
+            <Label Content="Telefon" />
+            <xceed:WatermarkTextBox Text="{Binding Telefon}" Watermark="Telefon" />
+
+            <Label Content="E-Mail" />
+            <xceed:WatermarkTextBox Text="{Binding Email}" Watermark="E-Mail" />
+
+            <Button
+                Height="30"
+                Margin="0,20,0,0"
+                Command="{Binding SpeichernCommand}"
+                Content="Speichern" />
+        </StackPanel>
+    </Grid>
+</UserControl>

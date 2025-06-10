@@ -1,0 +1,105 @@
+﻿<Window
+    x:Class="Crm.Views.KontaktWizard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="clr-namespace:Crm.Converter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Crm.Views"
+    xmlns:vm="clr-namespace:Crm.ViewModels"
+    xmlns:xceed="http://schemas.xceed.com/wpf/xaml/toolkit"
+    Title="Kontakt anlegen"
+    Width="800"
+    Height="600">
+
+    <Window.Resources>
+        <conv:IntToBoolConverter x:Key="IntToBoolConverter" />
+    </Window.Resources>
+
+    <Window.DataContext>
+        <vm:KontaktWizardViewModel />
+    </Window.DataContext>
+    <Grid>
+
+        <xceed:Wizard
+            x:Name="wizardMain"
+            Margin="20"
+            HorizontalContentAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
+            CancelButtonClosesWindow="True"
+            Finish="wizardMain_Finish">
+
+            <!--  Seite 1: Persönliche Daten  -->
+            <xceed:WizardPage Title="Persönliche Informationen" Description="Gib die Grunddaten des Kontakts ein.">
+                <StackPanel Margin="20">
+                    <xceed:WatermarkTextBox Text="{Binding Vorname}" Watermark="Vorname" />
+                    <xceed:WatermarkTextBox Text="{Binding Nachname}" Watermark="Nachname" />
+                    <TextBlock
+                        Margin="0,0,0,2"
+                        Foreground="Gray"
+                        Text="Geburtstag" />
+                    <DatePicker SelectedDate="{Binding Geburtstag}" />
+                    <ComboBox
+                        ItemsSource="{Binding Geschlechter}"
+                        SelectedValue="{Binding Geschlecht}"
+                        SelectedValuePath="." />
+                </StackPanel>
+            </xceed:WizardPage>
+
+            <!--  Seite 2: Firma  -->
+            <xceed:WizardPage Title="Firma / Abteilung / Position" Description="Wähle die Firma aus und gib weitere Details ein.">
+                <StackPanel Margin="20">
+
+                    <!--  ComboBox Unternehmen  -->
+                    <Label Content="Unternehmen" />
+                    <ComboBox
+                        Width="300"
+                        DisplayMemberPath="Firmenname"
+                        IsEditable="False"
+                        ItemsSource="{Binding UnternehmenListe}"
+                        SelectedItem="{Binding AusgewaehltesUnternehmen}" />
+
+                    <!--  ComboBox Abteilungen  -->
+                    <Label Margin="0,10,0,0" Content="Abteilung" />
+                    <ComboBox
+                        Width="300"
+                        DisplayMemberPath="Name"
+                        IsEnabled="{Binding AbteilungenListe.Count, Converter={StaticResource IntToBoolConverter}}"
+                        ItemsSource="{Binding Abteilungen}"
+                        SelectedItem="{Binding AusgewaehlteAbteilung}" />
+                </StackPanel>
+            </xceed:WizardPage>
+
+            <!--  Seite 3: Kontakt  -->
+            <xceed:WizardPage Title="Kontaktinformationen" Description="Telefon, E-Mail, Mobil usw.">
+                <StackPanel Margin="20">
+                    <xceed:WatermarkTextBox Text="{Binding TelefonGeschaeftlich}" Watermark="Telefon (geschäftlich)" />
+                    <xceed:WatermarkTextBox Text="{Binding TelefonPrivat}" Watermark="Telefon (privat)" />
+                    <xceed:WatermarkTextBox Text="{Binding Mobiltelefon}" Watermark="Mobiltelefon" />
+                    <xceed:WatermarkTextBox Text="{Binding Email}" Watermark="E-Mail" />
+                </StackPanel>
+            </xceed:WizardPage>
+
+            <!--  Seite 4: Adresse  -->
+            <xceed:WizardPage Title="Adresse" Description="Privat- und/oder Geschäftsadresse.">
+                <StackPanel Margin="20">
+                    <xceed:WatermarkTextBox Text="{Binding Strasse}" Watermark="Straße" />
+                    <xceed:WatermarkTextBox Text="{Binding PLZ}" Watermark="PLZ" />
+                    <xceed:WatermarkTextBox Text="{Binding Ort}" Watermark="Ort" />
+                    <xceed:WatermarkTextBox Text="{Binding Land}" Watermark="Land" />
+                </StackPanel>
+            </xceed:WizardPage>
+
+            <xceed:WizardPage Title="Fertigstellen" Description="Kontakt anlegen und speichern.">
+                <StackPanel Margin="20">
+                    <TextBlock Text="Klicke auf 'Fertig stellen', um den Kontakt zu speichern." />
+                    <Button
+                        x:Name="Finisch"
+                        Margin="0,20,0,0"
+                        HorizontalAlignment="Right"
+                        Command="{Binding FinishCommand}"
+                        Content="Fertig stellen" />
+                </StackPanel>
+            </xceed:WizardPage>
+        </xceed:Wizard>
+    </Grid>
+</Window>
