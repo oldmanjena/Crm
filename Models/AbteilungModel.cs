@@ -8,7 +8,7 @@ namespace Crm.Models
 {
     public class AbteilungModel
     {
-        public int? AbteilungId { get; set; }
+        public int AbteilungId { get; set; }
         public int UnternehmenId { get; set; } // Wird beim Speichern gesetzt
         public string Name { get; set; }
         public string Strasse { get; set; }

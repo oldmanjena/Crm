@@ -8,7 +8,7 @@ namespace Crm.Models
 {
     public class KontaktModel
     {
-        public int KontaktId { get; set; }
+        public int kontakt_id { get; set; }
         public string Vorname { get; set; }
         public string Nachname { get; set; }
         public DateTime? Geburtstag { get; set; }

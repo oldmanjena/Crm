@@ -1,6 +1,6 @@
-﻿using Crm.Klassen;      // Für RelayCommand
-using Crm.Models;       // Für UnternehmenModel
-using Crm.Views;        // Für Fenster wie UnternehmenWizard, AbteilungErfassen
+﻿using Crm.Klassen;      // RelayCommand
+using Crm.Models;       // UnternehmenModel, AbteilungModel, KontaktModel
+using Crm.Views;        // Fenster
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
@@ -18,6 +18,8 @@ namespace Crm.ViewModels
         }
 
         public ObservableCollection<UnternehmenModel> UnternehmenListe { get; set; }
+        public ObservableCollection<AbteilungModel> GefilterteAbteilungen { get; set; } = new();
+        public ObservableCollection<KontaktModel> GefilterteKontakte { get; set; } = new();
 
         private UnternehmenModel _ausgewaehltesUnternehmen;
 
@@ -30,16 +32,29 @@ namespace Crm.ViewModels
                 {
                     _ausgewaehltesUnternehmen = value;
                     OnChanged();
+                    LadeAbteilungen();
 
-                    // Command-Status aktualisieren
+                    // Commands aktualisieren
                     if (OpenAbteilungErfassenCommand is RelayCommand rc1)
-                    {
                         rc1.RaiseCanExecuteChanged();
-                    }
                     if (BearbeiteUnternehmenCommand is RelayCommand rc2)
-                    {
                         rc2.RaiseCanExecuteChanged();
-                    }
+                }
+            }
+        }
+
+        private AbteilungModel _ausgewaehlteAbteilung;
+
+        public AbteilungModel AusgewaehlteAbteilung
+        {
+            get => _ausgewaehlteAbteilung;
+            set
+            {
+                if (_ausgewaehlteAbteilung != value)
+                {
+                    _ausgewaehlteAbteilung = value;
+                    OnChanged();
+                    LadeKontakte();
                 }
             }
         }
@@ -57,6 +72,30 @@ namespace Crm.ViewModels
             BearbeiteUnternehmenCommand = new RelayCommand(_ => BearbeiteUnternehmen(), _ => AusgewaehltesUnternehmen != null);
         }
 
+        private void LadeAbteilungen()
+        {
+            GefilterteAbteilungen.Clear();
+            GefilterteKontakte.Clear(); // Auch Kontakte zurücksetzen
+
+            if (AusgewaehltesUnternehmen != null)
+            {
+                var abteilungen = DatenbankService.LadeAbteilungenZuUnternehmen(AusgewaehltesUnternehmen.unternehmen_id);
+                foreach (var abt in abteilungen)
+                    GefilterteAbteilungen.Add(abt);
+            }
+        }
+
+        private void LadeKontakte()
+        {
+            GefilterteKontakte.Clear();
+            if (AusgewaehlteAbteilung != null)
+            {
+                var kontakte = DatenbankService.LadeKontakteZuAbteilung((int)AusgewaehlteAbteilung.AbteilungId);
+                foreach (var kontakt in kontakte)
+                    GefilterteKontakte.Add(kontakt);
+            }
+        }
+
         private void BearbeiteUnternehmen()
         {
             if (AusgewaehltesUnternehmen == null)
@@ -65,24 +104,30 @@ namespace Crm.ViewModels
                 return;
             }
 
-            var dialog = new UnternehmenBearbeiten(AusgewaehltesUnternehmen);
-            dialog.Owner = Application.Current.MainWindow;
+            var dialog = new UnternehmenBearbeiten(AusgewaehltesUnternehmen)
+            {
+                Owner = Application.Current.MainWindow
+            };
+
             if (dialog.ShowDialog() == true)
             {
-                // Nach Bearbeitung: Liste neu laden
                 UnternehmenListe.Clear();
                 foreach (var u in DatenbankService.LadeAlleUnternehmenMitAbteilungen())
                     UnternehmenListe.Add(u);
+
+                // Abteilungen ggf. neu laden
+                LadeAbteilungen();
             }
         }
 
         private void OpenUnternehmenWizard()
         {
-            var fenster = new UnternehmenErfassenFenster();
-            fenster.Owner = Application.Current.MainWindow;
+            var fenster = new UnternehmenErfassenFenster
+            {
+                Owner = Application.Current.MainWindow
+            };
             fenster.ShowDialog();
 
-            // Liste neu laden
             UnternehmenListe.Clear();
             foreach (var u in DatenbankService.LadeAlleUnternehmenMitAbteilungen())
                 UnternehmenListe.Add(u);
@@ -104,6 +149,7 @@ namespace Crm.ViewModels
             UnternehmenListe.Clear();
             foreach (var u in DatenbankService.LadeAlleUnternehmenMitAbteilungen())
                 UnternehmenListe.Add(u);
+            LadeAbteilungen();
         }
     }
 }

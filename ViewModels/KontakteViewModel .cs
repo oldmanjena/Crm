@@ -91,7 +91,7 @@ namespace Crm.ViewModels
                 connection.Open();
 
                 var command = new SqlCommand("DELETE FROM Kontakte WHERE kontakt_id = @KontaktID", connection);
-                command.Parameters.AddWithValue("@KontaktID", AusgewählterKontakt.KontaktId);
+                command.Parameters.AddWithValue("@KontaktID", AusgewählterKontakt.kontakt_id);
                 command.ExecuteNonQuery();
 
                 KontaktListe.Remove(AusgewählterKontakt);

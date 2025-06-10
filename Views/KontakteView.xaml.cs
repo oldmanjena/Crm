@@ -23,7 +23,7 @@ namespace Crm.Views
             if (KontakteListView.SelectedItem is KontaktModel kontaktAusListe)
             {
                 // Lade vollständige Daten aus der DB
-                var vollerKontakt = DatenbankService.LadeKontaktNachId(kontaktAusListe.KontaktId);
+                var vollerKontakt = DatenbankService.LadeKontaktNachId(kontaktAusListe.kontakt_id);
 
                 if (vollerKontakt != null)
                 {

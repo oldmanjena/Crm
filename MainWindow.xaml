@@ -8,30 +8,55 @@
     Title="Startbildschirm"
     Width="1000"
     Height="600"
-    ui:WindowHelper.UseModernWindowStyle="True">
+    ui:WindowHelper.UseModernWindowStyle="True"
+    Background="{DynamicResource SystemControlBackgroundChromeMediumLowBrush}">
     <DockPanel>
 
         <!--  Menü/Ribbon oben  -->
-        <ToolBar DockPanel.Dock="Top">
-            <Button
-                Width="70"
-                Margin="5"
-                Content="Neu" />
-            <Button
-                Width="90"
-                Margin="5"
-                Content="Bearbeiten" />
-            <Button
-                Width="90"
-                Margin="5"
-                Content="Löschen" />
-            <Separator />
-            <Button
-                Width="90"
-                Margin="5"
-                Content="Suchen" />
-            <TextBox Width="150" Margin="5" />
-        </ToolBar>
+        <Border Background="{DynamicResource SystemControlBackgroundBaseMediumLowBrush}"
+        Padding="10"
+        DockPanel.Dock="Top"
+        CornerRadius="6"
+        Margin="5">
+            <DockPanel LastChildFill="False">
+
+                <!-- Linke Buttons -->
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <Button Width="90" Margin="0,0,5,0" Style="{StaticResource AccentButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe Fluent Icons" Text="" FontSize="16" Margin="0,0,5,0" />
+                            <TextBlock Text="Neu" />
+                        </StackPanel>
+                    </Button>
+                    <Button Width="110" Margin="0,0,5,0" Style="{StaticResource DefaultButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe Fluent Icons" Text="" FontSize="16" Margin="0,0,5,0" />
+                            <TextBlock Text="Bearbeiten" />
+                        </StackPanel>
+                    </Button>
+                    <Button Width="110" Margin="0,0,5,0" Style="{StaticResource DefaultButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe Fluent Icons" Text="" FontSize="16" Margin="0,0,5,0" />
+                            <TextBlock Text="Löschen" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <!-- Rechte Suchleiste -->
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                    <TextBox Width="150"
+                     VerticalContentAlignment="Center"
+                     Margin="0,0,5,0"
+                     Text="Suchen..." />
+                    <Button Width="100" Style="{StaticResource DefaultButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe Fluent Icons" Text="" FontSize="16" Margin="0,0,5,0" />
+                            <TextBlock Text="Suchen" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </DockPanel>
+        </Border>
 
         <!--  Navigation links  -->
         <TreeView

@@ -35,7 +35,7 @@
                 x:Name="KontakteListView"
                 ItemsSource="{Binding KontaktListe}"
                 MouseDoubleClick="KontakteListView_MouseDoubleClick"
-                 SelectedItem="{Binding AusgewählterKontakt, Mode=TwoWay}">
+                SelectedItem="{Binding AusgewählterKontakt, Mode=TwoWay}">
 
                 <ListView.View>
                     <GridView>

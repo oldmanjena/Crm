@@ -293,7 +293,7 @@ namespace Crm.ViewModels
                 cmd.Parameters.AddWithValue("@Land", (object)Land ?? DBNull.Value);
 
                 if (_bearbeiteterKontakt != null)
-                    cmd.Parameters.AddWithValue("@KontaktId", _bearbeiteterKontakt.KontaktId);
+                    cmd.Parameters.AddWithValue("@KontaktId", _bearbeiteterKontakt.kontakt_id);
 
                 cmd.ExecuteNonQuery();
 

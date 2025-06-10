@@ -126,7 +126,7 @@ namespace Crm.Klassen
                         {
                             return new KontaktModel
                             {
-                                KontaktId = reader.GetInt32(0),
+                                kontakt_id = reader.GetInt32(0),
                                 Vorname = reader.IsDBNull(1) ? null : reader.GetString(1),
                                 Nachname = reader.IsDBNull(2) ? null : reader.GetString(2),
                                 Geburtstag = reader.IsDBNull(3) ? (DateTime?)null : reader.GetDateTime(3),
@@ -192,7 +192,7 @@ namespace Crm.Klassen
                     cmd.Parameters.AddWithValue("@Land", kontakt.Land ?? "");
                     cmd.Parameters.AddWithValue("@UnternehmenId", (object?)kontakt.UnternehmenId ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@AbteilungId", (object?)kontakt.AbteilungId ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Id", kontakt.KontaktId);
+                    cmd.Parameters.AddWithValue("@Id", kontakt.kontakt_id);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -221,7 +221,7 @@ namespace Crm.Klassen
                     {
                         kontakte.Add(new KontaktModel
                         {
-                            KontaktId = reader.GetInt32(0),
+                            kontakt_id = reader.GetInt32(0),
                             Vorname = reader.IsDBNull(1) ? null : reader.GetString(1),
                             Nachname = reader.IsDBNull(2) ? null : reader.GetString(2),
                             Email = reader.IsDBNull(3) ? null : reader.GetString(3)
@@ -231,6 +231,83 @@ namespace Crm.Klassen
             }
 
             return kontakte;
+        }
+
+        public static List<AbteilungModel> LadeAbteilungenZuUnternehmen(int unternehmens_Id)
+        {
+            var kontAbteilungen = new List<AbteilungModel>();
+
+            var setting = ConfigurationManager.ConnectionStrings["CrmDatabase"];
+            string connString = setting.ConnectionString;
+
+            using (var conn = new SqlConnection(connString))
+            {
+                conn.Open();
+
+                string query = @"SELECT * FROM abteilungen WHERE unternehmen_id = @unternehmens_id";
+
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    // Add the parameter here
+                    cmd.Parameters.AddWithValue("@unternehmens_id", unternehmens_Id);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            kontAbteilungen.Add(new AbteilungModel
+                            {
+                                AbteilungId = reader.GetInt32(0),
+                                // Assuming your columns are in order: AbteilungId, Name, Strasse, Ort
+                                // Please double check the column indices based on your actual table schema
+                                Name = reader.IsDBNull(1) ? null : reader.GetString(2), // Assuming Name is at index 1
+                                Strasse = reader.IsDBNull(2) ? null : reader.GetString(3), // Assuming Strasse is at index 2
+                                Ort = reader.IsDBNull(3) ? null : reader.GetString(4) // Assuming Ort is at index 3
+                            });
+                        }
+                    }
+                }
+
+                return kontAbteilungen;
+            }
+        }
+
+        // SELECT* FROM kontakte WHERE AbteilungId = @abteilungsId
+        public static List<KontaktModel> LadeKontakteZuAbteilung(int abteilungsId)
+        {
+            var kontakte = new List<KontaktModel>();
+
+            var setting = ConfigurationManager.ConnectionStrings["CrmDatabase"];
+            string connString = setting.ConnectionString;
+
+            using (var conn = new SqlConnection(connString))
+            {
+                conn.Open();
+
+                string query = @"
+                             SELECT* FROM kontakte WHERE abteilungId = @abteilungsId";
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    // Add the parameter here
+                    cmd.Parameters.AddWithValue("@abteilungsId", abteilungsId);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            kontakte.Add(new KontaktModel
+                            {
+                                kontakt_id = reader.GetInt32(reader.GetOrdinal("kontakt_id")),
+                                Vorname = reader.IsDBNull(reader.GetOrdinal("Vorname")) ? null : reader.GetString(reader.GetOrdinal("Vorname")),
+                                Nachname = reader.IsDBNull(reader.GetOrdinal("Nachname")) ? null : reader.GetString(reader.GetOrdinal("Nachname")),
+                                Email = reader.IsDBNull(reader.GetOrdinal("Email")) ? null : reader.GetString(reader.GetOrdinal("Email"))
+                            });
+                        }
+                    }
+                }
+
+                return kontakte;
+            }
         }
     }
 }
